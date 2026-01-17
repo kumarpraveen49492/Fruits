@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 app=FastAPI()
+@app.get("/")
+def root():
+    return {"status": "ok"}
 class Fruit(BaseModel):
     id:int
     name:str
@@ -30,17 +33,20 @@ def post_fruits_by_id(Fruit:Fruit):
            "fruit":Fruit
        }    
 @app.put("/fruits/{id}")
-def update_fruits(id:int,Fruit:Fruit):
+def update_fruits(id: int, updated_fruit: Fruit):
+
     for i in range(len(fruits)):
-        if Fruit.id==id:
-            Fruit.name=update_fruits.name
-            Fruit.quantity=update_fruits.quantity
-            Fruit.price=update_fruits.price
-            return{
-                "message":"Fruits deleed succesfully",
-                "Fruit":Fruit
-            }          
-    return "Fruits updated succesfully" 
+        if fruits[i].id == id:
+            fruits[i].name = updated_fruit.name
+            fruits[i].quantity = updated_fruit.quantity
+            fruits[i].price = updated_fruit.price
+
+            return {
+                "message": "Fruit updated successfully",
+                "fruit": fruits[i]
+            }
+
+    return {"error": "Fruit not found"}
 @app.delete("/fruits/{id}")
 def delete_fruits(id:int,Fruit:Fruit):
     for i in range(len(fruits)):
